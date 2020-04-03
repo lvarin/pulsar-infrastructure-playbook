@@ -35,7 +35,8 @@ check_fqdn:
 	$(call check_defined, FQDN, add FQDN=value)
 
 preparation: check_fqdn
-	echo $(FQDN) ansible_connection=ssh ansible_user=centos >> inventory
+        sed -i 's/^\([^#\[]\)/#\1/' inventory
+        grep $(FQDN) inventory || echo $(FQDN) ansible_connection=ssh ansible_user=centos >> inventory
 	mkdir -p files/$(FQDN)
 	cp files/job_metrics_conf.xml files/$(FQDN)
 	touch host_vars/$(FQDN)
